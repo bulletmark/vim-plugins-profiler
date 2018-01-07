@@ -50,5 +50,5 @@ for ind, plugin in enumerate(sorted(times, key=times.get, reverse=True), 1):
     if args.num and ind > args.num:
         break
 
-    print('{:3}: {:7.3f} ({:4.1f}%) {}'.format(ind, times[plugin],
+    print('{:4}: {:9.3f} ({:4.1f}%) {}'.format(ind, times[plugin],
         times[plugin] / totalval * 100., plugin))
