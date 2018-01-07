@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+'Output sorted summary of VIM plugin startup times in millisecs.'
+# Mark Blakeney, Jan 2018
+import sys, argparse, subprocess, tempfile
+from pathlib import Path
+from collections import defaultdict
+
+BASEDIR = Path.home() / \
+        ('vimfiles' if sys.platform.startswith('win') else '.vim')
+
+opt = argparse.ArgumentParser(description=__doc__.strip())
+opt.add_argument('-n', '--num', type=int,
+        help='limit output to given number of plugins')
+args = opt.parse_args()
+
+logfile = tempfile.NamedTemporaryFile('r')
+tmpfile = tempfile.NamedTemporaryFile('r')
+cmd = 'vim -Xf --startuptime {} -cqa {}'.format(logfile.name, tmpfile.name)
+res = subprocess.run(cmd.split(), universal_newlines=True)
+
+if res.returncode != 0:
+    sys.exit('.. exited with vim error.')
+
+times = defaultdict(float)
+totalval = 0
+for line in logfile:
+    if ': sourcing /' not in line:
+        continue
+
+    junk, junk, tstr, junk, fname = line.split()
+
+    # Only concerned with personal plugins
+    try:
+        rpath = Path(fname).relative_to(BASEDIR)
+    except ValueError:
+        continue
+
+    # Skip autoload dir
+    if rpath.parts[0] == 'autoload':
+        continue
+
+    tval = float(tstr.rstrip(':'))
+    totalval += tval
+
+    # Assume child dirs are all plugin-dir/plugin-name/
+    times[rpath.parts[1]] += tval
+
+# Output sorted results
+for ind, plugin in enumerate(sorted(times, key=times.get, reverse=True), 1):
+    if args.num and ind > args.num:
+        break
+
+    print('{:3}: {:7.3f} ({:4.1f}%) {}'.format(ind, times[plugin],
+        times[plugin]/totalval * 100., plugin))
