@@ -51,4 +51,4 @@ for ind, plugin in enumerate(sorted(times, key=times.get, reverse=True), 1):
         break
 
     print('{:3}: {:7.3f} ({:4.1f}%) {}'.format(ind, times[plugin],
-        times[plugin]/totalval * 100., plugin))
+        times[plugin] / totalval * 100., plugin))
