@@ -5,7 +5,7 @@ is a small utility which outputs a sorted list of [vim
 editor](http://www.vim.org) plugin startup times in millisec. Only vim
 plugins you have installed personally in your home directory are
 considered. This utility was written for Linux platforms but should work
-on other platforms as well, including Windows.
+on other platforms as well, including Mac and Windows.
 
 The latest version and documentation is available at
 https://github.com/bulletmark/vim-plugins-profiler.
