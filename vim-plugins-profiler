@@ -19,7 +19,7 @@ logfile = tempfile.NamedTemporaryFile('r')
 tmpfile = tempfile.NamedTemporaryFile('r')
 cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
         tmpfile.name)
-res = subprocess.run(cmd.split(), universal_newlines=True)
+res = subprocess.run(cmd.split())
 
 if res.returncode != 0:
     sys.exit('.. exited with vim error.')
@@ -34,11 +34,11 @@ for line in logfile:
 
     # Only concerned with personal plugins
     try:
-        rpath = Path(fname).relative_to(HOME)
+        fpath = Path(fname).relative_to(HOME)
     except ValueError:
         continue
 
-    paths[rpath] += float(tstr.rstrip(':'))
+    paths[fpath] += float(tstr.rstrip(':'))
 
 # Now remove any common path prefix
 prefix = os.path.commonpath(paths)
