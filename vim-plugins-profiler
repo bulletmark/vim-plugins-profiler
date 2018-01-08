@@ -1,28 +1,31 @@
 #!/usr/bin/env python3
 'Output sorted summary of VIM plugin startup times in millisecs.'
 # Mark Blakeney, Jan 2018
-import sys, argparse, subprocess, tempfile
+import os, sys, argparse, subprocess, tempfile
 from pathlib import Path
 from collections import defaultdict
 
-BASEDIR = Path.home() / \
-        ('vimfiles' if sys.platform.startswith('win') else '.vim')
+HOME = Path.home()
 
 opt = argparse.ArgumentParser(description=__doc__.strip())
+opt.add_argument('-e', '--exe', default='vim',
+        help='vim executable name, default="%(default)s"')
 opt.add_argument('-n', '--num', type=int,
         help='limit output to given number of plugins')
 args = opt.parse_args()
 
+# Need file for vim to log to and an empty file for vim to open.
 logfile = tempfile.NamedTemporaryFile('r')
 tmpfile = tempfile.NamedTemporaryFile('r')
-cmd = 'vim -Xf --startuptime {} -cqa {}'.format(logfile.name, tmpfile.name)
+cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
+        tmpfile.name)
 res = subprocess.run(cmd.split(), universal_newlines=True)
 
 if res.returncode != 0:
     sys.exit('.. exited with vim error.')
 
-times = defaultdict(float)
-totalval = 0
+# Create dict of paths and times
+paths = defaultdict(float)
 for line in logfile:
     if ': sourcing /' not in line:
         continue
@@ -31,24 +34,28 @@ for line in logfile:
 
     # Only concerned with personal plugins
     try:
-        rpath = Path(fname).relative_to(BASEDIR)
+        rpath = Path(fname).relative_to(HOME)
     except ValueError:
         continue
 
-    # Skip autoload dir
-    if rpath.parts[0] == 'autoload':
-        continue
+    paths[rpath] += float(tstr.rstrip(':'))
 
-    tval = float(tstr.rstrip(':'))
-    totalval += tval
+# Now remove any common path prefix
+prefix = os.path.commonpath(paths)
+paths = {Path(p).relative_to(prefix): v for p, v in paths.items()}
 
-    # Assume child dirs are all plugin-dir/plugin-name/
-    times[rpath.parts[1]] += tval
+# Now assume plugin name is unique dir name in plugin dir and so tally
+# times. We also skip autoloads.
+times = defaultdict(float)
+for path, val in paths.items():
+    if path.parts[0] != 'autoload':
+        times[path.parts[1]] += val
 
 # Output sorted results
+percent = 100. / sum(times.values())
 for ind, plugin in enumerate(sorted(times, key=times.get, reverse=True), 1):
     if args.num and ind > args.num:
         break
 
-    print('{:4}: {:9.3f} ({:4.1f}%) {}'.format(ind, times[plugin],
-        times[plugin] / totalval * 100., plugin))
+    v = times[plugin]
+    print('{:4}: {:9.3f} ({:4.1f}%) {}'.format(ind, v, v * percent, plugin))
