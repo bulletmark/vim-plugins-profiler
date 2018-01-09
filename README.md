@@ -15,18 +15,21 @@ https://github.com/bulletmark/vim-plugins-profiler.
 Just run at command line, e.g.:
 ~~~~
 $ vim-plugins-profiler
-   1:    17.423 (72.1%) nerdtree
-   2:     2.131 ( 8.8%) tabular
-   3:     1.683 ( 7.0%) YouCompleteMe
-   4:     1.624 ( 6.7%) emmet-vim
-   5:     0.569 ( 2.4%) ctrlp.vim
-   6:     0.295 ( 1.2%) vim-better-whitespace
-   7:     0.156 ( 0.6%) vim-commentary
-   8:     0.148 ( 0.6%) autoload_cscope.vim
-   9:     0.078 ( 0.3%) ag.vim
-  10:     0.035 ( 0.1%) vim-javascript
-  11:     0.015 ( 0.1%) typescript-vim
-  12:     0.010 ( 0.0%) vim-vue
+   1:    16.759 (54.4%) nerdtree
+   2:     4.248 (13.8%) vim-airline
+   3:     2.880 ( 9.3%) delimitMate
+   4:     2.000 ( 6.5%) tabular
+   5:     1.596 ( 5.2%) emmet-vim
+   6:     1.579 ( 5.1%) YouCompleteMe
+   7:     0.668 ( 2.2%) ctrlp.vim
+   8:     0.399 ( 1.3%) vim-surround
+   9:     0.271 ( 0.9%) vim-better-whitespace
+  10:     0.155 ( 0.5%) vim-commentary
+  11:     0.141 ( 0.5%) autoload_cscope.vim
+  12:     0.080 ( 0.3%) ag.vim
+  13:     0.034 ( 0.1%) vim-javascript
+  14:     0.015 ( 0.0%) typescript-vim
+  15:     0.010 ( 0.0%) vim-vue
 ~~~~
 
 - The plugin startup times are in millisec, sorted from highest usage to

@@ -48,14 +48,15 @@ paths = {Path(p).relative_to(prefix): v for p, v in paths.items()}
 # times. We also skip autoloads.
 times = defaultdict(float)
 for path, val in paths.items():
-    if path.parts[0] != 'autoload':
+    if len(path.parts) > 1 and path.parts[0] != 'autoload':
         times[path.parts[1]] += val
 
 # Output sorted results
-percent = 100. / sum(times.values())
-for ind, plugin in enumerate(sorted(times, key=times.get, reverse=True), 1):
-    if args.num and ind > args.num:
-        break
+if times:
+    percent = 100. / sum(times.values())
+    for ind, plugin in enumerate(sorted(times, key=times.get, reverse=True), 1):
+        if args.num and ind > args.num:
+            break
 
-    v = times[plugin]
-    print('{:4}: {:9.3f} ({:4.1f}%) {}'.format(ind, v, v * percent, plugin))
+        v = times[plugin]
+        print('{:4}: {:9.3f} ({:4.1f}%) {}'.format(ind, v, v * percent, plugin))
