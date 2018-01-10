@@ -7,7 +7,7 @@ from collections import defaultdict
 
 HOME = Path.home()
 
-# List of vim subdirs to exclude
+# List of subdirs to exclude
 EXCLUDED = ('autoload',)
 
 opt = argparse.ArgumentParser(description=__doc__.strip())
@@ -17,15 +17,18 @@ opt.add_argument('-n', '--num', type=int,
         help='limit output to given number of plugins')
 args = opt.parse_args()
 
-# Need file for vim to log to and an empty file for vim to open.
+# Need file to log to and an empty file to edit
 logfile = tempfile.NamedTemporaryFile('r')
 tmpfile = tempfile.NamedTemporaryFile('r')
 cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
         tmpfile.name)
-res = subprocess.run(cmd.split())
+try:
+    res = subprocess.run(cmd.split())
+except Exception as e:
+    sys.exit(e)
 
 if res.returncode != 0:
-    sys.exit('.. exited with vim error.')
+    sys.exit('.. exited with {} error.'.format(args.exe))
 
 # Create dict of paths and times
 paths = defaultdict(float)
