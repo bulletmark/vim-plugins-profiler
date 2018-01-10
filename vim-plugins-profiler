@@ -7,6 +7,9 @@ from collections import defaultdict
 
 HOME = Path.home()
 
+# List of vim subdirs to exclude
+EXCLUDED = ('autoload',)
+
 opt = argparse.ArgumentParser(description=__doc__.strip())
 opt.add_argument('-e', '--exe', default='vim',
         help='vim executable name, default="%(default)s"')
@@ -45,10 +48,10 @@ prefix = os.path.commonpath(paths)
 paths = {Path(p).relative_to(prefix): v for p, v in paths.items()}
 
 # Now assume plugin name is unique dir name in plugin dir and so tally
-# times. We also skip autoloads.
+# times. We also exclude some subdirs.
 times = defaultdict(float)
 for path, val in paths.items():
-    if len(path.parts) > 1 and path.parts[0] != 'autoload':
+    if len(path.parts) > 1 and path.parts[0] not in EXCLUDED:
         times[path.parts[1]] += val
 
 # Output sorted results
