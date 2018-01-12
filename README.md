@@ -47,7 +47,7 @@ Output sorted summary of VIM plugin startup times in millisecs.
 
 optional arguments:
   -h, --help         show this help message and exit
-  -e EXE, --exe EXE  vim executable name, default="vim"
+  -e EXE, --exe EXE  vim executable name or path, default="vim"
   -n NUM, --num NUM  limit output to given number of plugins
 ~~~~
 
@@ -61,7 +61,7 @@ Requires python 3.5 or later. Type the following to install.
 
     git clone https://github.com/bulletmark/vim-plugins-profiler
     cd vim-plugins-profiler
-    sudo make install
+    sudo make install (or sudo ./vim-plugins-profiler-setup install)
 
 There is no configuration required.
 
@@ -69,7 +69,7 @@ There is no configuration required.
 
     cd vim-plugins-profiler  # Source dir, as above
     git pull
-    sudo make install
+    sudo make install (or sudo ./vim-plugins-profiler-setup install)
 
 ### REMOVAL
 

@@ -12,7 +12,7 @@ EXCLUDED = ('autoload',)
 
 opt = argparse.ArgumentParser(description=__doc__.strip())
 opt.add_argument('-e', '--exe', default='vim',
-        help='vim executable name, default="%(default)s"')
+        help='vim executable name or path, default="%(default)s"')
 opt.add_argument('-n', '--num', type=int,
         help='limit output to given number of plugins')
 args = opt.parse_args()
