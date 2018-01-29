@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 'Output sorted summary of VIM plugin startup times in millisecs.'
 # Mark Blakeney, Jan 2018
-import os, sys, argparse, subprocess, tempfile
+import os, sys, argparse, subprocess, tempfile, statistics
 from pathlib import Path
 from collections import defaultdict
 
@@ -13,6 +13,8 @@ EXCLUDED = ('autoload',)
 opt = argparse.ArgumentParser(description=__doc__.strip())
 opt.add_argument('-e', '--exe', default='vim',
         help='vim executable name or path, default="%(default)s"')
+opt.add_argument('-r', '--runs', type=int, default=4,
+        help='number of sample runs to average over, default=%(default)d')
 opt.add_argument('-n', '--num', type=int,
         help='limit output to given number of plugins')
 args = opt.parse_args()
@@ -22,40 +24,58 @@ logfile = tempfile.NamedTemporaryFile('r')
 tmpfile = tempfile.NamedTemporaryFile('r')
 cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
         tmpfile.name)
-try:
-    res = subprocess.run(cmd.split())
-except Exception as e:
-    sys.exit(e)
 
-if res.returncode != 0:
-    sys.exit('.. exited with {} error.'.format(args.exe))
-
-# Create dict of paths and times
-paths = defaultdict(float)
-for line in logfile:
-    if ': sourcing /' not in line:
-        continue
-
-    junk, junk, tstr, junk, fname = line.split()
-
-    # Only concerned with personal plugins
+def do_sample_run(plugins):
     try:
-        fpath = Path(fname).relative_to(HOME)
-    except ValueError:
-        continue
+        res = subprocess.run(cmd.split())
+    except Exception as e:
+        sys.exit(e)
 
-    paths[fpath] += float(tstr.rstrip(':'))
+    if res.returncode != 0:
+        sys.exit('.. exited with {} error.'.format(args.exe))
 
-# Now remove any common path prefix
-prefix = os.path.commonpath(paths)
-paths = {Path(p).relative_to(prefix): v for p, v in paths.items()}
+    # Create dict of paths and times
+    paths = defaultdict(float)
+    for line in logfile:
+        if ': sourcing /' not in line:
+            continue
 
-# Now assume plugin name is unique dir name in plugin dir and so tally
-# times. We also exclude some subdirs.
-times = defaultdict(float)
-for path, val in paths.items():
-    if len(path.parts) > 1 and path.parts[0] not in EXCLUDED:
-        times[path.parts[1]] += val
+        junk, junk, tstr, junk, fname = line.split()
+
+        # Only concerned with personal plugins
+        try:
+            fpath = Path(fname).relative_to(HOME)
+        except ValueError:
+            continue
+
+        paths[fpath] += float(tstr.rstrip(':'))
+
+    # Now remove any common path prefix
+    prefix = os.path.commonpath(paths)
+    paths = {Path(p).relative_to(prefix): v for p, v in paths.items()}
+
+    # Now assume plugin name is unique dir name in plugin dir and so tally
+    # times. We also exclude some subdirs.
+    times = defaultdict(float)
+    for path, val in paths.items():
+        if len(path.parts) > 1 and path.parts[0] not in EXCLUDED:
+            times[path.parts[1]] += val
+
+    # Do sanity check to ensure we have consistent set of plugins found
+    # each sample run
+    if plugins and set(plugins) != set(times):
+        sys.exit('Inconsistency in plugins found each sample run')
+
+    for plugin, val in times.items():
+        plugins[plugin].append(val)
+
+# Do N sample runs and accumulate times for each plugin in a list
+plugins = defaultdict(list)
+for run in range(args.runs):
+    do_sample_run(plugins)
+
+# Calculate a representative time from each plugins list of sample times
+times = {p: statistics.median(v) for p, v in plugins.items()}
 
 # Output sorted results
 if times:
