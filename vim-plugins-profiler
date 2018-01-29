@@ -25,7 +25,8 @@ tmpfile = tempfile.NamedTemporaryFile('r')
 cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
         tmpfile.name)
 
-def do_sample_run(plugins):
+def do_sample_run():
+    'Run editor and capture a sample of plugin times'
     try:
         res = subprocess.run(cmd.split())
     except Exception as e:
@@ -61,18 +62,24 @@ def do_sample_run(plugins):
         if len(path.parts) > 1 and path.parts[0] not in EXCLUDED:
             times[path.parts[1]] += val
 
-    # Do sanity check to ensure we have consistent set of plugins found
-    # each sample run
-    if plugins and set(plugins) != set(times):
-        sys.exit('Inconsistency in plugins found each sample run')
-
-    for plugin, val in times.items():
-        plugins[plugin].append(val)
+    # Return times for each plugin, for this run
+    return times
 
 # Do N sample runs and accumulate times for each plugin in a list
 plugins = defaultdict(list)
 for run in range(args.runs):
-    do_sample_run(plugins)
+    times = do_sample_run()
+
+    # Do sanity check to ensure we have consistent set of plugins found
+    # each sample run
+    if not plugins:
+        plugin_names = set(times)
+    elif plugin_names != set(times):
+        sys.exit('Inconsistency in plugins found each sample run')
+
+    # Add new sample run times to list for each plugin
+    for plugin, val in times.items():
+        plugins[plugin].append(val)
 
 # Calculate a representative time from each plugins list of sample times
 times = {p: statistics.median(v) for p, v in plugins.items()}
