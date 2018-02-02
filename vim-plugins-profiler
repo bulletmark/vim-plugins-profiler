@@ -8,7 +8,8 @@ from collections import defaultdict
 HOME = Path.home()
 
 # List of subdirs to exclude
-EXCLUDED = ('autoload',)
+EXCLUDED = {'autoload', 'colors', 'compiler', 'doc', 'ftplugin', 'indent',
+        'keymap', 'lang', 'pack', 'print', 'spell', 'syntax', 'tutor'}
 
 opt = argparse.ArgumentParser(description=__doc__.strip())
 opt.add_argument('-e', '--exe', default='vim',
@@ -24,6 +25,11 @@ logfile = tempfile.NamedTemporaryFile('r')
 tmpfile = tempfile.NamedTemporaryFile('r')
 cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
         tmpfile.name)
+
+def remove_common(paths):
+    'Remove any common path prefix from given dict of paths'
+    prefix = os.path.commonpath(paths)
+    return {Path(p).relative_to(prefix): v for p, v in paths.items()}
 
 def do_sample_run():
     'Run editor and capture a sample of plugin times'
@@ -51,16 +57,16 @@ def do_sample_run():
 
         paths[fpath] += float(tstr.rstrip(':'))
 
-    # Now remove any common path prefix
-    prefix = os.path.commonpath(paths)
-    paths = {Path(p).relative_to(prefix): v for p, v in paths.items()}
+    # Now remove any common path prefix and excluded dirs
+    paths = remove_common(paths)
+    paths = {p: v for p, v in paths.items() if len(p.parts) > 1 and
+            p.parts[0] not in EXCLUDED}
+    paths = remove_common(paths)
 
-    # Now assume plugin name is unique dir name in plugin dir and so tally
-    # times. We also exclude some subdirs.
+    # Now assume plugin name is unique dir name and so tally times.
     times = defaultdict(float)
     for path, val in paths.items():
-        if len(path.parts) > 1 and path.parts[0] not in EXCLUDED:
-            times[path.parts[1]] += val
+        times[path.parts[0]] += val
 
     # Return times for each plugin, for this run
     return times
