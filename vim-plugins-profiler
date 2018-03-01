@@ -7,7 +7,7 @@ from collections import defaultdict
 
 HOME = Path.home()
 
-# List of subdirs to exclude
+# Set of subdirs to exclude
 EXCLUDED = {'autoload', 'colors', 'compiler', 'doc', 'ftplugin', 'indent',
         'keymap', 'lang', 'pack', 'print', 'spell', 'syntax', 'tutor'}
 
@@ -63,7 +63,7 @@ def do_sample_run():
             p.parts[0] not in EXCLUDED}
     paths = remove_common(paths)
 
-    # Now assume plugin name is unique dir name and so tally times.
+    # Now assume plugin name is unique top dir name and so tally times.
     times = defaultdict(float)
     for path, val in paths.items():
         times[path.parts[0]] += val
