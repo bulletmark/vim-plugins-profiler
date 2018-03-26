@@ -33,7 +33,7 @@ fi
 
 cmd="$1"
 
-DESTDIR=$(echo "$DESTDIR" | sed 's:/*$::')
+DESTDIR="${DESTDIR%%+(/)}"
 if [[ -z "$DESTDIR" && $(id -un) != "root" ]]; then
     echo "Must be run as sudo/root."
     exit 1
