@@ -34,12 +34,12 @@ fi
 cmd="$1"
 
 DESTDIR="${DESTDIR%%+(/)}"
-if [[ -z "$DESTDIR" && $(id -un) != "root" ]]; then
+if [[ -z $DESTDIR && $(id -un) != root ]]; then
     echo "Must be run as sudo/root."
     exit 1
 fi
 
-if [[ $cmd == "install" ]]; then
+if [[ $cmd == install ]]; then
     install -CDv -m 755 -t $DESTDIR$BINDIR $NAME-setup
     install -CDv -m 755 -t $DESTDIR$BINDIR $NAME
     install -CDv -m 644 -t $DESTDIR$DOCDIR README.md
@@ -48,7 +48,7 @@ if [[ $cmd == "install" ]]; then
     if hash markdown &>/dev/null; then
 	markdown -o $DESTDIR$DOCDIR/README.html README.md
     fi
-elif [[ $cmd == "uninstall" ]]; then
+elif [[ $cmd == uninstall ]]; then
     rm -rfv $DESTDIR$DOCDIR
     rm -rfv $DESTDIR$BINDIR/$NAME
     rm -rfv $DESTDIR$BINDIR/$NAME-setup
