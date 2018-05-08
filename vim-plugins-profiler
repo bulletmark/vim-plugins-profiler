@@ -59,8 +59,8 @@ def do_sample_run():
 
     # Now remove any common path prefix and excluded dirs
     paths = remove_common(paths)
-    paths = {p: v for p, v in paths.items() if len(p.parts) > 1 and
-            p.parts[0] not in EXCLUDED}
+    paths = {p: v for p, v in paths.items() if
+            len(p.parts) > 1 and p.parts[0] not in EXCLUDED}
     paths = remove_common(paths)
 
     # Now assume plugin name is unique top dir name and so tally times.
