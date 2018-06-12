@@ -1,4 +1,4 @@
-# Copyright (C) 2013 Mark Blakeney. This program is distributed under
+# Copyright (C) 2016 Mark Blakeney. This program is distributed under
 # the terms of the GNU General Public License.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,24 +14,36 @@
 
 DOC = README.md
 
+SCRIPT = vim-plugins-profiler
+MODULE = vim_plugins_profiler
+
 DOCOUT = $(DOC:.md=.html)
 
 all:
-	@echo "Type sudo make install|uninstall"
+	@echo "Type sudo make install|uninstall, or make doc|check|clean"
 
 install:
-	@./vim-plugins-profiler-setup -d "$(DESTDIR)" install
+	@python setup.py install --root=$(or $(DESTDIR),/) --optimize=1
 
 uninstall:
-	@./vim-plugins-profiler-setup -d "$(DESTDIR)" uninstall
+	@rm -vrf /usr/bin/$(SCRIPT)* /etc/$(SCRIPT).conf \
+	    /usr/share/doc/$(MODULE) \
+	    /usr/lib/python*/site-packages/*$(MODULE)* \
+	    /usr/lib/python*/site-packages/*/*$(MODULE)*
+
+sdist:
+	python3 setup.py sdist
+
+upload: sdist
+	twine upload dist/*
 
 doc:	$(DOCOUT)
+
+check:
+	flake8 $(MODULE).py $(SCRIPT) setup.py
 
 $(DOCOUT): $(DOC)
 	markdown $< >$@
 
-check:
-	flake8 vim-plugins-profiler
-
 clean:
-	rm -rf $(DOCOUT)
+	@rm -vrf $(DOCOUT) *.egg-info build/ dist/ __pycache__/

@@ -13,7 +13,7 @@ https://github.com/bulletmark/vim-plugins-profiler.
 ### USAGE
 
 Just run at command line, e.g.:
-~~~~
+```
 $ vim-plugins-profiler
    1:    16.759 (54.4%) nerdtree
    2:     4.248 (13.8%) vim-airline
@@ -30,7 +30,7 @@ $ vim-plugins-profiler
   13:     0.034 ( 0.1%) vim-javascript
   14:     0.015 ( 0.0%) typescript-vim
   15:     0.010 ( 0.0%) vim-vue
-~~~~
+```
 
 - The plugin startup times are in millisec, sorted from highest usage to
   lowest.
@@ -40,7 +40,7 @@ $ vim-plugins-profiler
 
 #### OPTIONAL ARGUMENTS
 
-~~~~
+```
 usage: vim-plugins-profiler [-h] [-e EXE] [-r RUNS] [-n NUM]
 
 Output sorted summary of VIM plugin startup times in millisecs.
@@ -50,30 +50,39 @@ optional arguments:
   -e EXE, --exe EXE     vim executable name or path, default="vim"
   -r RUNS, --runs RUNS  number of sample runs to average over, default=4
   -n NUM, --num NUM     limit output to given number of plugins
-~~~~
+```
 
 ### INSTALLATION
 
 NOTE: Arch Linux users can just install
-[_vim-plugins-profiler from the AUR_](https://aur.archlinux.org/packages/vim-plugins-profiler/) and skip to the next section.
+[vim-plugins-profiler from the AUR](https://aur.archlinux.org/packages/vim-plugins-profiler/).
 
-Requires python 3.5 or later. Type the following to install.
+Requires python 3.5 or later. Note [vim-plugin-profiler is on
+PyPI](https://pypi.org/project/vim-plugin-profiler) so you can `sudo pip install
+vim-plugin-profiler` or:
 
-    git clone https://github.com/bulletmark/vim-plugins-profiler
-    cd vim-plugins-profiler
-    sudo make install (or sudo ./vim-plugins-profiler-setup install)
+```
+git clone https://github.com/bulletmark/vim-plugins-profiler
+cd vim-plugins-profiler
+sudo make install
+```
 
 There is no configuration required.
 
 ### UPGRADE
 
-    cd vim-plugins-profiler  # Source dir, as above
-    git pull
-    sudo make install (or sudo ./vim-plugins-profiler-setup install)
+```
+cd vim-plugins-profiler  # Source dir, as above
+git pull
+sudo make install
+```
 
 ### REMOVAL
 
-    sudo vim-plugin-profiler-setup uninstall
+```
+cd vim-plugins-profiler  # Source dir, as above
+sudo make uninstall
+```
 
 ### LICENSE
 
