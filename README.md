@@ -1,6 +1,6 @@
 ## VIM PLUGINS PROFILER
 
-[vim-plugin-profiler](https://github.com/bulletmark/vim-plugin-profiler)
+[vim-plugins-profiler](https://github.com/bulletmark/vim-plugins-profiler)
 is a small utility which outputs a sorted list of [vim
 editor](http://www.vim.org) plugin startup times in millisec. Only vim
 plugins you have installed personally in your home directory are
@@ -57,9 +57,9 @@ optional arguments:
 NOTE: Arch Linux users can just install
 [vim-plugins-profiler from the AUR](https://aur.archlinux.org/packages/vim-plugins-profiler/).
 
-Requires python 3.5 or later. Note [vim-plugin-profiler is on
-PyPI](https://pypi.org/project/vim-plugin-profiler) so you can `sudo pip install
-vim-plugin-profiler` or:
+Requires python 3.5 or later. Note [vim-plugins-profiler is on
+PyPI](https://pypi.org/project/vim-plugins-profiler) so you can `sudo pip install
+vim-plugins-profiler` or:
 
 ```
 git clone https://github.com/bulletmark/vim-plugins-profiler

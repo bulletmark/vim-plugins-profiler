@@ -14,7 +14,7 @@ executable = stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH
 
 setup(
     name=name,
-    version='1.8',
+    version='1.8.1',
     description='Program to output sorted summary of vim plugin startup times',
     long_description=readme,
     long_description_content_type="text/markdown",
