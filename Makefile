@@ -26,10 +26,10 @@ install:
 	@python setup.py install --root=$(or $(DESTDIR),/) --optimize=1
 
 uninstall:
-	@rm -vrf /usr/bin/$(SCRIPT)* /etc/$(SCRIPT).conf \
-	    /usr/share/doc/$(MODULE) \
-	    /usr/lib/python*/site-packages/*$(MODULE)* \
-	    /usr/lib/python*/site-packages/*/*$(MODULE)*
+	@rm -vrf $(DESTDIR)/usr/bin/$(SCRIPT)* $(DESTDIR)/etc/$(SCRIPT).conf \
+	    $(DESTDIR)/usr/share/doc/$(MODULE) \
+	    $(DESTDIR)/usr/lib/python*/site-packages/*$(MODULE)* \
+	    $(DESTDIR)/usr/lib/python*/site-packages/*/*$(MODULE)*
 
 sdist:
 	python3 setup.py sdist
