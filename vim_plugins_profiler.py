@@ -28,6 +28,9 @@ cmd = '{} -Xf --startuptime {} -cqa {}'.format(args.exe, logfile.name,
 
 def remove_common(paths):
     'Remove any common path prefix from given dict of paths'
+    if not paths:
+        return paths
+
     prefix = os.path.commonpath(paths)
     return {Path(p).relative_to(prefix): v for p, v in paths.items()}
 
