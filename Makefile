@@ -23,7 +23,7 @@ all:
 	@echo "Type sudo make install|uninstall, or make doc|check|clean"
 
 install:
-	@python setup.py install --root=$(or $(DESTDIR),/) --optimize=1
+	@python3 setup.py install --root=$(or $(DESTDIR),/) --optimize=1
 
 uninstall:
 	@rm -vrf $(DESTDIR)/usr/bin/$(SCRIPT)* $(DESTDIR)/etc/$(SCRIPT).conf \
@@ -41,6 +41,7 @@ doc:	$(DOCOUT)
 
 check:
 	flake8 $(MODULE).py $(SCRIPT) setup.py
+	vermin -i -t 3.5 $(MODULE).py $(SCRIPT) setup.py
 
 $(DOCOUT): $(DOC)
 	markdown $< >$@
