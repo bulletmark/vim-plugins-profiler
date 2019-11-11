@@ -58,13 +58,14 @@ NOTE: Arch Linux users can just install
 [vim-plugins-profiler from the AUR](https://aur.archlinux.org/packages/vim-plugins-profiler/).
 
 Requires python 3.5 or later. Note [vim-plugins-profiler is on
-PyPI](https://pypi.org/project/vim-plugins-profiler) so you can `sudo pip install
-vim-plugins-profiler` or:
+PyPI](https://pypi.org/project/vim-plugins-profiler) so you can
+`sudo pip3 install vim-plugins-profiler` or:
 
 ```
 git clone https://github.com/bulletmark/vim-plugins-profiler
 cd vim-plugins-profiler
-sudo make install
+# Requires python3-pip package installed:
+sudo pip3 install .
 ```
 
 There is no configuration required.
@@ -74,14 +75,13 @@ There is no configuration required.
 ```
 cd vim-plugins-profiler  # Source dir, as above
 git pull
-sudo make install
+sudo pip3 install -U .
 ```
 
 ### REMOVAL
 
 ```
-cd vim-plugins-profiler  # Source dir, as above
-sudo make uninstall
+sudo pip3 uninstall vim-plugins-profiler
 ```
 
 ### LICENSE

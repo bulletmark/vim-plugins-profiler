@@ -12,39 +12,36 @@
 # General Public License at <http://www.gnu.org/licenses/> for more
 # details.
 
+NAME = vim-plugins-profiler
+
+PYNAME = $(subst -,_,$(NAME))
 DOC = README.md
-
-SCRIPT = vim-plugins-profiler
-MODULE = vim_plugins_profiler
-
 DOCOUT = $(DOC:.md=.html)
 
 all:
-	@echo "Type sudo make install|uninstall, or make doc|check|clean"
+	@echo "Type sudo make install|uninstall"
+	@echo "or make sdist|upload|doc|check|clean"
 
 install:
-	@python3 setup.py install --root=$(or $(DESTDIR),/) --optimize=1
+	pip3 install .
 
 uninstall:
-	@rm -vrf $(DESTDIR)/usr/bin/$(SCRIPT)* $(DESTDIR)/etc/$(SCRIPT).conf \
-	    $(DESTDIR)/usr/share/doc/$(MODULE) \
-	    $(DESTDIR)/usr/lib/python*/site-packages/*$(MODULE)* \
-	    $(DESTDIR)/usr/lib/python*/site-packages/*/*$(MODULE)*
+	pip3 uninstall $(NAME)
 
 sdist:
 	python3 setup.py sdist
 
 upload: sdist
-	twine upload dist/*
+	twine3 upload dist/*
 
 doc:	$(DOCOUT)
 
-check:
-	flake8 $(MODULE).py $(SCRIPT) setup.py
-	vermin -i -t 3.5 $(MODULE).py $(SCRIPT) setup.py
-
 $(DOCOUT): $(DOC)
 	markdown $< >$@
+
+check:
+	flake8 $(PYNAME).py $(NAME) setup.py
+	vermin -i -q $(PYNAME).py $(NAME) setup.py
 
 clean:
 	@rm -vrf $(DOCOUT) *.egg-info build/ dist/ __pycache__/

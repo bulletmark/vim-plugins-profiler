@@ -2,21 +2,20 @@
 # Setup script to install this package.
 # M.Blakeney, Mar 2018.
 
-import re, stat
+import stat
 from pathlib import Path
 from setuptools import setup
 
+name = 'vim-plugins-profiler'
+module = name.replace('-', '_')
 here = Path(__file__).resolve().parent
-name = re.sub(r'-\d+\.\d+.*', '', here.name)
-module = re.sub('-', '_', name)
-readme = here.joinpath('README.md').read_text()
 executable = stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH
 
 setup(
     name=name,
-    version='1.8.2',
+    version='1.8.3',
     description='Program to output sorted summary of vim plugin startup times',
-    long_description=readme,
+    long_description=here.joinpath('README.md').read_text(),
     long_description_content_type="text/markdown",
     url='https://github.com/bulletmark/{}'.format(name),
     author='Mark Blakeney',
@@ -29,8 +28,8 @@ setup(
         'Programming Language :: Python :: 3',
     ],
     data_files=[
-        ('share/doc/{}'.format(name), ['README.md']),
+        ('share/{}'.format(name), ['README.md']),
     ],
-    scripts=[f.name for f in here.iterdir()
-        if f.is_file() and f.stat().st_mode & executable]
+    scripts=[f.name for f in here.iterdir() if f.name.startswith(name)
+        and f.is_file() and f.stat().st_mode & executable],
 )
