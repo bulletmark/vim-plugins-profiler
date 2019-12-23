@@ -9,7 +9,8 @@ HOME = Path.home()
 
 # Set of subdirs to exclude
 EXCLUDED = {'autoload', 'colors', 'compiler', 'doc', 'ftplugin', 'indent',
-        'keymap', 'lang', 'pack', 'print', 'spell', 'syntax', 'tutor'}
+        'keymap', 'lang', 'macros', 'pack', 'print', 'spell', 'syntax',
+        'tools', 'tutor', 'ftdetect', 'after'}
 
 opt = argparse.ArgumentParser(description=__doc__.strip())
 opt.add_argument('-e', '--exe', default='vim',
