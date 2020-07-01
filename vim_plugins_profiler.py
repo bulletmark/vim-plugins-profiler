@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 'Output sorted summary of VIM plugin startup times in millisecs.'
 # Mark Blakeney, Jan 2018
-import os, sys, argparse, subprocess, tempfile, statistics
+import os
+import sys
+import argparse
+import subprocess
+import tempfile
+import statistics
 from pathlib import Path
 from collections import defaultdict
 
@@ -83,10 +88,14 @@ def main():
 
         # Do sanity check to ensure we have consistent set of plugins found
         # each sample run
+        names = set(times)
         if not plugins:
-            plugin_names = set(times)
-        elif plugin_names != set(times):
-            sys.exit('Inconsistency in plugins found each sample run')
+            plugin_names = names
+        elif plugin_names != names:
+            diffs = ', '.join(str(i)
+                    for i in plugin_names.symmetric_difference(names))
+            sys.exit('Inconsistency in plugins found each '
+                    'sample run:\n{}'.format(diffs))
 
         # Add new sample run times to list for each plugin
         for plugin, val in times.items():
