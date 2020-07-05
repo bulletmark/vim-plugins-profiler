@@ -83,6 +83,7 @@ def do_sample_run():
 def main():
     'Do N sample runs and accumulate times for each plugin in a list'
     plugins = defaultdict(list)
+    diffs = None
     for run in range(args.runs):
         times = do_sample_run()
 
@@ -92,10 +93,12 @@ def main():
         if not plugins:
             plugin_names = names
         elif plugin_names != names:
-            diffs = ', '.join(str(i)
-                    for i in plugin_names.symmetric_difference(names))
-            sys.exit('Inconsistency in plugins found each '
-                    'sample run:\n{}'.format(diffs))
+            diffs = plugin_names.symmetric_difference(names)
+            diffstr = ', '.join(str(i) for i in diffs)
+            print('{} inconsistent plugins found in sample run '
+                    '{}:\n{}'.format(len(diffs), run + 1, diffstr),
+                    file=sys.stderr)
+            continue
 
         # Add new sample run times to list for each plugin
         for plugin, val in times.items():
@@ -105,7 +108,7 @@ def main():
     times = {p: statistics.median(v) for p, v in plugins.items()}
 
     # Output sorted results
-    if times:
+    if times and not diffs:
         percent = 100. / sum(times.values())
         for ind, plugin in enumerate(sorted(times, key=times.get,
                 reverse=True), 1):
