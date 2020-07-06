@@ -52,6 +52,7 @@ def do_sample_run():
 
     # Create dict of paths and times
     paths = defaultdict(float)
+    logfile.seek(0)
     for line in logfile:
         if ': sourcing /' not in line:
             continue
