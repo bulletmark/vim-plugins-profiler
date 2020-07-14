@@ -80,31 +80,29 @@ def main():
     'Do N sample runs and accumulate times for each plugin in a list'
     plugins = defaultdict(list)
     diffs = None
+    for run in range(args.runs):
 
-    # Need empty file to edit
-    with tempfile.NamedTemporaryFile('r') as tmpfile:
-        for run in range(args.runs):
+        # For each run we need an empty file to edit, and a log file
+        with tempfile.NamedTemporaryFile('r') as tmpfile, \
+                tempfile.NamedTemporaryFile('r') as logfile:
+            times = do_sample_run(tmpfile, logfile)
 
-            # Need log file for this run
-            with tempfile.NamedTemporaryFile('r') as logfile:
-                times = do_sample_run(tmpfile, logfile)
+        # Do sanity check to ensure we have consistent set of
+        # plugins found each sample run
+        names = set(times)
+        if not plugins:
+            plugin_names = names
+        elif plugin_names != names:
+            diffs = plugin_names.symmetric_difference(names)
+            diffstr = ', '.join(str(i) for i in diffs)
+            print('{} inconsistent plugins found in sample run '
+                    '{}:\n{}'.format(len(diffs), run + 1, diffstr),
+                    file=sys.stderr)
+            continue
 
-            # Do sanity check to ensure we have consistent set of
-            # plugins found each sample run
-            names = set(times)
-            if not plugins:
-                plugin_names = names
-            elif plugin_names != names:
-                diffs = plugin_names.symmetric_difference(names)
-                diffstr = ', '.join(str(i) for i in diffs)
-                print('{} inconsistent plugins found in sample run '
-                        '{}:\n{}'.format(len(diffs), run + 1, diffstr),
-                        file=sys.stderr)
-                continue
-
-            # Add new sample run times to list for each plugin
-            for plugin, val in times.items():
-                plugins[plugin].append(val)
+        # Add new sample run times to list for each plugin
+        for plugin, val in times.items():
+            plugins[plugin].append(val)
 
     # Calculate a representative time from each plugins list of sample times
     times = {p: statistics.median(v) for p, v in plugins.items()}

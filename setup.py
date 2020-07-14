@@ -13,7 +13,7 @@ executable = stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH
 
 setup(
     name=name,
-    version='1.11',
+    version='1.12',
     description='Program to output sorted summary of vim plugin startup times',
     long_description=here.joinpath('README.md').read_text(),
     long_description_content_type="text/markdown",
