@@ -1,4 +1,0 @@
-#!/usr/bin/python3
-from sys import exit
-from vim_plugins_profiler import main
-exit(main())

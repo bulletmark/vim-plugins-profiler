@@ -12,7 +12,7 @@
 # General Public License at <http://www.gnu.org/licenses/> for more
 # details.
 
-NAME = vim-plugins-profiler
+NAME = $(shell basename $(CURDIR))
 
 PYNAME = $(subst -,_,$(NAME))
 DOC = README.md
@@ -29,10 +29,11 @@ uninstall:
 	pip3 uninstall $(NAME)
 
 sdist:
+	rm -rf dist
 	python3 setup.py sdist
 
 upload: sdist
-	twine3 upload dist/*
+	twine3 upload --skip-existing dist/*
 
 doc:	$(DOCOUT)
 
@@ -40,8 +41,9 @@ $(DOCOUT): $(DOC)
 	markdown $< >$@
 
 check:
-	flake8 $(PYNAME).py $(NAME) setup.py
-	vermin --no-tips -i -q $(PYNAME).py $(NAME) setup.py
+	flake8 $(PYNAME).py setup.py
+	vermin --no-tips -i -q $(PYNAME).py setup.py
+	python setup.py check
 
 clean:
 	@rm -vrf $(DOCOUT) *.egg-info build/ dist/ __pycache__/
