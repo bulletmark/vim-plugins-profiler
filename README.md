@@ -71,7 +71,6 @@ Or, to install from this source repository:
 ```
 git clone https://github.com/bulletmark/vim-plugins-profiler
 cd vim-plugins-profiler
-# Requires python3-pip package installed:
 sudo pip3 install -U .
 ```
 
