@@ -30,7 +30,7 @@ uninstall:
 
 sdist:
 	rm -rf dist
-	python3 setup.py sdist
+	python3 setup.py sdist bdist_wheel
 
 upload: sdist
 	twine3 upload --skip-existing dist/*
