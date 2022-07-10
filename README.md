@@ -1,4 +1,6 @@
 ## VIM PLUGINS PROFILER
+[![PyPi](https://img.shields.io/pypi/v/vim-plugins-profiler)](https://pypi.org/project/vim-plugins-profiler/)
+[![AUR](https://img.shields.io/aur/version/vim-plugins-profiler)](https://aur.archlinux.org/packages/vim-plugins-profiler/)
 
 [vim-plugins-profiler](https://github.com/bulletmark/vim-plugins-profiler)
 is a small utility which outputs a sorted list of [vim
