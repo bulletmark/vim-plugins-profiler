@@ -36,15 +36,15 @@ def remove_common(paths):
 
 def do_sample_run(tmpfile, logfile):
     'Run editor and capture a sample of plugin times'
-    cmd = '{} -Xf --not-a-term --startuptime {} -cqa {}'.format(
-            args.exe, logfile.name, tmpfile.name)
+    cmd = f'{args.exe} -Xf --not-a-term --startuptime {logfile.name} '\
+            f'-cqa {tmpfile.name}'
     try:
         res = subprocess.run(cmd.split())
     except Exception as e:
         sys.exit(e)
 
     if res.returncode != 0:
-        sys.exit('.. exited with {} error.'.format(args.exe))
+        sys.exit(f'.. exited with {args.exe} error.')
 
     # Create dict of paths and times
     paths = defaultdict(float)
@@ -95,9 +95,8 @@ def main():
         elif plugin_names != names:
             diffs = plugin_names.symmetric_difference(names)
             diffstr = ', '.join(str(i) for i in diffs)
-            print('{} inconsistent plugins found in sample run '
-                    '{}:\n{}'.format(len(diffs), run + 1, diffstr),
-                    file=sys.stderr)
+            print(f'{len(diffs)} inconsistent plugins found in sample run '
+                    f'{run + 1}:\n{diffstr}', file=sys.stderr)
             continue
 
         # Add new sample run times to list for each plugin
@@ -116,8 +115,7 @@ def main():
                 break
 
             v = times[plugin]
-            print('{:4}: {:9.3f} ({:4.1f}%) {}'.format(ind, v, v * percent,
-                plugin))
+            print(f'{ind:4}: {v:9.3f} ({v * percent:4.1f}%) {plugin}')
 
 if __name__ == '__main__':
     sys.exit(main())
