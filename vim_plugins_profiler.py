@@ -39,7 +39,8 @@ def do_sample_run(tmpfile, logfile):
     cmd = f'{args.exe} -Xf --not-a-term --startuptime {logfile.name} '\
             f'-cqa {tmpfile.name}'
     try:
-        res = subprocess.run(cmd.split())
+        res = subprocess.run(cmd.split(), universal_newlines=True,
+                             stdout=subprocess.DEVNULL)
     except Exception as e:
         sys.exit(e)
 

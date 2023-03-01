@@ -47,7 +47,7 @@ usage: vim-plugins-profiler [-h] [-e EXE] [-r RUNS] [-n NUM]
 
 Output sorted summary of VIM plugin startup times in millisecs.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -e EXE, --exe EXE     vim executable name or path, default="vim"
   -r RUNS, --runs RUNS  number of sample runs to average over, default=4

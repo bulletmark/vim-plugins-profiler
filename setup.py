@@ -11,7 +11,7 @@ here = Path(__file__).resolve().parent
 
 setup(
     name=name,
-    version='1.14',
+    version='1.15',
     description='Program to output sorted summary of vim plugin startup times',
     long_description=here.joinpath('README.md').read_text(),
     long_description_content_type="text/markdown",
