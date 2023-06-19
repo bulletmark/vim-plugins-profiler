@@ -60,36 +60,18 @@ NOTE: Arch Linux users can just install
 [vim-plugins-profiler from the AUR](https://aur.archlinux.org/packages/vim-plugins-profiler/).
 
 Python 3.6 or later is required. Note [vim-plugins-profiler is on
-PyPI](https://pypi.org/project/vim-plugins-profiler/) so just ensure that
-`python3-pip` and `python3-wheel` are installed then type the following
-to install (or upgrade):
+PyPI](https://pypi.org/project/vim-plugins-profiler/) so just ensure
+that [`pipx`](https://pypa.github.io/pipx/) is installed then type the
+following:
 
 ```
-$ sudo pip3 install -U vim-plugins-profiler
+$ pipx install vim-plugins-profiler
 ```
 
-Or, to install from this source repository:
+To upgrade:
 
 ```
-git clone https://github.com/bulletmark/vim-plugins-profiler
-cd vim-plugins-profiler
-sudo pip3 install -U .
-```
-
-There is no configuration required.
-
-### UPGRADE
-
-```
-cd vim-plugins-profiler  # Source dir, as above
-git pull
-sudo pip3 install -U .
-```
-
-### REMOVAL
-
-```
-sudo pip3 uninstall vim-plugins-profiler
+$ pipx upgrade vim-plugins-profiler
 ```
 
 ### LICENSE
