@@ -12,8 +12,6 @@ on other platforms as well, including Mac and Windows.
 The latest version and documentation is available at
 https://github.com/bulletmark/vim-plugins-profiler.
 
-### USAGE
-
 Just run at command line, e.g.:
 ```
 $ vim-plugins-profiler
@@ -40,7 +38,9 @@ $ vim-plugins-profiler
   (i.e. the total plugin time additional to normal vim startup time)
   that each plugin contributes.
 
-#### OPTIONAL ARGUMENTS
+## USAGE
+
+Type `vim-plugins-profiler -h` to view the usage summary:
 
 ```
 usage: vim-plugins-profiler [-h] [-e EXE] [-r RUNS] [-n NUM]
@@ -54,7 +54,7 @@ options:
   -n NUM, --num NUM     limit output to given number of plugins
 ```
 
-### INSTALLATION
+## INSTALLATION
 
 NOTE: Arch Linux users can just install
 [vim-plugins-profiler from the AUR](https://aur.archlinux.org/packages/vim-plugins-profiler/).
@@ -74,7 +74,7 @@ To upgrade:
 $ pipx upgrade vim-plugins-profiler
 ```
 
-### LICENSE
+## LICENSE
 
 Copyright (C) 2018 Mark Blakeney. This program is distributed under the
 terms of the GNU General Public License. This program is free software:
