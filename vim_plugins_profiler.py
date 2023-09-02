@@ -15,16 +15,7 @@ HOME = Path.home()
 # Set of subdirs to exclude
 EXCLUDED = {'autoload', 'colors', 'compiler', 'doc', 'ftplugin', 'indent',
         'keymap', 'lang', 'macros', 'pack', 'print', 'spell', 'syntax',
-        'tools', 'tutor', 'ftdetect', 'after'}
-
-opt = argparse.ArgumentParser(description=__doc__.strip())
-opt.add_argument('-e', '--exe', default='vim',
-        help='vim executable name or path, default="%(default)s"')
-opt.add_argument('-r', '--runs', type=int, default=4,
-        help='number of sample runs to average over, default=%(default)d')
-opt.add_argument('-n', '--num', type=int,
-        help='limit output to given number of plugins')
-args = opt.parse_args()
+        'tools', 'tutor', 'ftdetect', 'after', '.config', 'site'}
 
 def remove_common(paths):
     'Remove any common path prefix from given dict of paths'
@@ -34,9 +25,24 @@ def remove_common(paths):
     prefix = os.path.commonpath(paths)
     return {Path(p).relative_to(prefix): v for p, v in paths.items()}
 
-def do_sample_run(tmpfile, logfile):
+def whittle_down(paths):
+    'Whittle down paths by removing excluded dirs and common prefixes'
+    while True:
+        pathscopy = paths.copy()
+        paths = {p: v for p, v in paths.items() if
+                len(p.parts) > 1 and p.parts[0] not in EXCLUDED}
+        paths = remove_common(paths)
+        if paths == pathscopy:
+            break
+
+    return paths
+
+def do_sample_run(prog, tmpfile, logfile):
+    notaterm = '' if any(p in prog for p in ('nvim', 'neovim')) \
+            else ' --not-a-term'
+
     'Run editor and capture a sample of plugin times'
-    cmd = f'{args.exe} -Xf --not-a-term --startuptime {logfile.name} '\
+    cmd = f'{prog} -Xf -V0{notaterm} --startuptime {logfile.name} '\
             f'-cqa {tmpfile.name}'
     try:
         res = subprocess.run(cmd.split(), universal_newlines=True,
@@ -45,7 +51,7 @@ def do_sample_run(tmpfile, logfile):
         sys.exit(e)
 
     if res.returncode != 0:
-        sys.exit(f'.. exited with {args.exe} error.')
+        sys.exit(f'.. exited with {prog} error.')
 
     # Create dict of paths and times
     paths = defaultdict(float)
@@ -64,10 +70,7 @@ def do_sample_run(tmpfile, logfile):
         paths[fpath] += float(tstr.rstrip(':'))
 
     # Now remove any common path prefix and excluded dirs
-    paths = remove_common(paths)
-    paths = {p: v for p, v in paths.items() if
-            len(p.parts) > 1 and p.parts[0] not in EXCLUDED}
-    paths = remove_common(paths)
+    paths = whittle_down(remove_common(paths))
 
     # Now assume plugin name is unique top dir name and so tally times.
     times = defaultdict(float)
@@ -78,6 +81,15 @@ def do_sample_run(tmpfile, logfile):
     return times
 
 def main():
+    opt = argparse.ArgumentParser(description=__doc__.strip())
+    opt.add_argument('-e', '--exe', default='vim',
+            help='vim executable name or path, default="%(default)s"')
+    opt.add_argument('-r', '--runs', type=int, default=4,
+            help='number of sample runs to average over, default=%(default)d')
+    opt.add_argument('-n', '--num', type=int,
+            help='limit output to given number of plugins')
+    args = opt.parse_args()
+
     'Do N sample runs and accumulate times for each plugin in a list'
     plugins = defaultdict(list)
     diffs = None
@@ -86,7 +98,7 @@ def main():
         # For each run we need an empty file to edit, and a log file
         with tempfile.NamedTemporaryFile('r') as tmpfile, \
                 tempfile.NamedTemporaryFile('r') as logfile:
-            times = do_sample_run(tmpfile, logfile)
+            times = do_sample_run(args.exe, tmpfile, logfile)
 
         # Do sanity check to ensure we have consistent set of
         # plugins found each sample run

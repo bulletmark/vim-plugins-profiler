@@ -38,6 +38,12 @@ $ vim-plugins-profiler
   (i.e. the total plugin time additional to normal vim startup time)
   that each plugin contributes.
 
+You should also be able to use it with [neovim](https://neovim.io/):
+
+```
+$ vim-plugins-profiler -e nvim
+```
+
 ## USAGE
 
 Type `vim-plugins-profiler -h` to view the usage summary:
