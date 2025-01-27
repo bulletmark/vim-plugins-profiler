@@ -2,8 +2,7 @@ NAME = $(shell basename $(CURDIR))
 PYNAME = $(subst -,_,$(NAME))
 
 check:
-	ruff $(PYNAME).py
-	flake8 $(PYNAME).py
+	ruff check $(PYNAME).py
 	mypy $(PYNAME).py
 	vermin -vv --exclude importlib.metadata --no-tips -i $(PYNAME).py
 
