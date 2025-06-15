@@ -67,7 +67,7 @@ NOTE: Arch Linux users can just install
 
 Python 3.6 or later is required. Note [vim-plugins-profiler is on
 PyPI](https://pypi.org/project/vim-plugins-profiler/) so just ensure
-that [`pipx`](https://pypa.github.io/pipx/) is installed then type the
+that [`pipx`](https://pipx.pypa.io/stable/) is installed then type the
 following:
 
 ```
